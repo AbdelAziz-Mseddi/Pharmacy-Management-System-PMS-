@@ -11,7 +11,29 @@ import java.time.LocalDate;
 import connexion_sql.Connexion;
 
 public class Employe {
-    //TOUSKIE COMMANDE
+    //TOUSKIE COMMANDE/FOURNISSEUR
+    public int ajouterFournisseur(String entreprise, int tel, String mail) throws SQLException {
+
+    String sql = "INSERT INTO Fournisseur (entreprise, tel, mail) VALUES (?, ?, ?)";
+
+    try (Connection conn = DBConnection.getConnection();
+         PreparedStatement ps = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
+
+        ps.setString(1, entreprise);
+        ps.setInt(2, tel);
+        ps.setString(3, mail);
+
+        ps.executeUpdate();
+
+        ResultSet keys = ps.getGeneratedKeys();
+        if (keys.next()) {
+            return keys.getInt(1); // idFournisseur generated
+        }
+    }
+
+    return -1; // insertion failed
+    }
+
     public boolean modifierCommande(
 	        int idCommande,
 	        int idFournisseur,
