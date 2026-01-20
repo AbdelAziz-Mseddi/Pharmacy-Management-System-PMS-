@@ -11,12 +11,14 @@ import java.time.LocalDate;
 import connexion_sql.Connexion;
 
 public class Employe {
+    private static final int SEUIL_STOCK = 50;
+    
     //TOUSKIE COMMANDE/FOURNISSEUR
     public int ajouterFournisseur(String entreprise, int tel, String mail) throws SQLException {
 
     String sql = "INSERT INTO Fournisseur (entreprise, tel, mail) VALUES (?, ?, ?)";
 
-    try (Connection conn = DBConnection.getConnection();
+    try (Connection conn = Connexion.getConnection();
          PreparedStatement ps = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
 
         ps.setString(1, entreprise);
@@ -125,7 +127,7 @@ public class Employe {
     public int creerClient(String nom, String prenom, int tel) throws SQLException {
     String sql = "INSERT INTO Clients (nom, prenom, tel) VALUES (?, ?, ?)";
 
-    try (Connection conn = DBConnection.getConnection();
+    try (Connection conn = Connexion.getConnection();
          PreparedStatement ps = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
 
         ps.setString(1, nom);
@@ -145,7 +147,7 @@ public class Employe {
     public int creerFactureVente(int idClient, LocalDate dateVente, float total) throws SQLException {
     String sql = "INSERT INTO FactureVente (idClient, dateVente, total) VALUES (?, ?, ?)";
 
-    try (Connection conn = DBConnection.getConnection();
+    try (Connection conn = Connexion.getConnection();
          PreparedStatement ps = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
 
         ps.setInt(1, idClient);
@@ -167,19 +169,61 @@ public class Employe {
         int idMedicament,
         float prixUnitaireVente,
         int quantite
-    ) throws SQLException {
+    ) throws SQLException, StockInsuffisantException {
 
+        Connection conn = Connexion.getConnection();
+        
+        // Check current stock
+        String checkStockSql = "SELECT quantite FROM Medicament WHERE idMedicament = ?";
+        try (PreparedStatement psCheck = conn.prepareStatement(checkStockSql)) {
+            psCheck.setInt(1, idMedicament);
+            ResultSet rs = psCheck.executeQuery();
+            
+            if (rs.next()) {
+                int stockActuel = rs.getInt("quantite");
+                
+                // Check if stock is sufficient
+                if (stockActuel < quantite) {
+                    throw new StockInsuffisantException(
+                        "Stock insuffisant pour le médicament ID " + idMedicament + 
+                        ". Stock actuel: " + stockActuel + ", Quantité demandée: " + quantite
+                    );
+                }
+                
+                // Check if stock after sale would fall below threshold
+                if ((stockActuel - quantite) < SEUIL_STOCK) {
+                    throw new StockInsuffisantException(
+                        "Stock insuffisant pour le médicament ID " + idMedicament + 
+                        ". Le stock après vente (" + (stockActuel - quantite) + 
+                        ") serait inférieur au seuil (" + SEUIL_STOCK+")"
+					);
+                }
+            } else {
+                throw new SQLException("Médicament introuvable avec l'ID: " + idMedicament);
+            }
+        }
+        
+        // Insert sale details
         String sql = "INSERT INTO DetailsVente (idVente, idMedicament, prixUnitaireVente, quantite) VALUES (?, ?, ?, ?)";
-
-        try (Connection conn = DBConnection.getConnection();
-            PreparedStatement ps = conn.prepareStatement(sql)) {
-
+        try (PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setInt(1, idVente);
             ps.setInt(2, idMedicament);
             ps.setFloat(3, prixUnitaireVente);
             ps.setInt(4, quantite);
 
-            return ps.executeUpdate() > 0; // true if row inserted
+            int rowsInserted = ps.executeUpdate();
+            
+            // Update stock if insertion successful
+            if (rowsInserted > 0) {
+                String updateStockSql = "UPDATE Medicament SET quantite = quantite - ? WHERE idMedicament = ?";
+                try (PreparedStatement psUpdate = conn.prepareStatement(updateStockSql)) {
+                    psUpdate.setInt(1, quantite);
+                    psUpdate.setInt(2, idMedicament);
+                    psUpdate.executeUpdate();
+                }
+                return true;
+            }
+            return false;
         }
     }
 
