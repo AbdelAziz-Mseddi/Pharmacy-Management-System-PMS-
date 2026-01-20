@@ -15,13 +15,16 @@ public class Admin extends Employe {
                 "        WHEN quantite > (seuilMin * ? + seuilMin) THEN 'eleve'\n" +
                 "        ELSE 'moyen'\n" +
                 "    END AS etat_stock\n" +
-                "FROM Medicament" +
+                "FROM Medicament\n" +
                 "order by etat_stock;";
 
         try (Connection conn = Connexion.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
             ps.setFloat(1, marge);
-            return ps.executeQuery();
+            ps.setFloat(2, marge);
+            ResultSet res=ps.executeQuery();
+            printResultSet(res);//for testing
+            return res;
         }
     }
     public float[] getChiffreAffaires(LocalDate date) throws SQLException {
@@ -66,9 +69,44 @@ public class Admin extends Employe {
 
         try (Connection conn = Connexion.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
-            return ps.executeQuery();
+            ResultSet res=ps.executeQuery();
+            printResultSet(res); //for testing
+            return res;
         }
     }
+    static void printResultSet(ResultSet rs) throws SQLException { //for testing
+        ResultSetMetaData md = rs.getMetaData();
+        int cols = md.getColumnCount();
+
+        // header (optional)
+        for (int i = 1; i <= cols; i++) {
+            if (i > 1) System.out.print(" | ");
+            System.out.print(md.getColumnLabel(i));
+        }
+        System.out.println();
+
+        // rows
+        while (rs.next()) {
+            for (int i = 1; i <= cols; i++) {
+                if (i > 1) System.out.print(" | ");
+                System.out.print(rs.getString(i)); // generic printing
+            }
+            System.out.println();
+        }
+    }
+    public static void main(String[] args) {
+        Admin Ad1=new Admin();
+        try {
+            ResultSet r1 = Ad1.getEtatStock(0.5f);
+            ResultSet r2 = Ad1.getPerformanceFournisseur();
+        }catch (SQLException e){
+            System.err.println(e.getMessage());
+            System.err.println(e.getErrorCode());
+            e.printStackTrace();
+
+        }
+    }
+
 
 
 }
