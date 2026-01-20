@@ -94,7 +94,7 @@ public class Admin extends Employe {
             System.out.println();
         }
     }
-    public static void main(String[] args) {
+    public static void main(String[] args) { // for testing
         Admin Ad1=new Admin();
         try {
             ResultSet r1 = Ad1.getEtatStock(0.5f);
