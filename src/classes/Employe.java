@@ -38,24 +38,22 @@ public class Employe {
 
     public boolean modifierCommande(
 	        int idCommande,
-	        int idFournisseur,
 	        LocalDate dateLivraisonPrevue,
 	        int total
 	) throws SQLException {
 
 	    String sql =
 	        "UPDATE Commande " +
-	        "SET idFournisseur = ?, dateLivraisonPrevue = ?, total = ? " +
+	        "SET dateLivraisonPrevue = ?, total = ? " +
 	        "WHERE idCommande = ? AND etat = 'en cours'";
 	    Connection conn = Connexion.getConnection();
 
 	    try (PreparedStatement ps = conn.prepareStatement(sql)) {
-	        ps.setInt(1, idFournisseur);
-	        ps.setDate(2, Date.valueOf(dateLivraisonPrevue));
-	        ps.setInt(3, total);
-	        ps.setInt(4, idCommande);
+	        ps.setDate(1, Date.valueOf(dateLivraisonPrevue));
+	        ps.setInt(2, total);
+	        ps.setInt(3, idCommande);
 
-	        return ps.executeUpdate() > 0;
+	        return ps.executeUpdate() > 0;      
 	    }
 	}
 	
@@ -92,37 +90,69 @@ public class Employe {
 	}
 
 	public int creerCommande(
-	        int idFournisseur,
-	        LocalDate dateCommande,
-	        LocalDate dateLivraisonPrevue,
-	        LocalDate dateLivraisonReelle,
-	        int total
-	) throws SQLException {
+        int idFournisseur,
+        LocalDate dateCommande,
+        LocalDate dateLivraisonPrevue,
+        LocalDate dateLivraisonReelle,
+        int total
+    ) throws SQLException {
 
-	    String sql =
-	        "INSERT INTO Commande " +
-	        "(idFournisseur, dateCommande, dateLivraisonPrevue, dateLivraisonReelle, total, etat) " +
-	        "VALUES (?, ?, ?, ?, ?, 'en cours')";
-	    Connection conn = Connexion.getConnection();
+        String sql =
+            "INSERT INTO Commande " +
+            "(idFournisseur, dateCommande, dateLivraisonPrevue, dateLivraisonReelle, total, etat) " +
+            "VALUES (?, ?, ?, ?, ?, 'en cours')";
 
-	    try (PreparedStatement ps =
-	             conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
+        try (Connection conn = Connexion.getConnection();
+            PreparedStatement ps = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
 
-	        ps.setInt(1, idFournisseur);
-	        ps.setDate(2, Date.valueOf(dateCommande));
-	        ps.setDate(3, Date.valueOf(dateLivraisonPrevue));
-	        ps.setDate(4, Date.valueOf(dateLivraisonReelle));
-	        ps.setInt(5, total);
+            ps.setInt(1, idFournisseur);
+            ps.setDate(2, java.sql.Date.valueOf(dateCommande));
+            ps.setDate(3, java.sql.Date.valueOf(dateLivraisonPrevue));
 
-	        ps.executeUpdate();
+            // ✅ Gestion du null
+            if (dateLivraisonReelle != null) {
+                ps.setDate(4, java.sql.Date.valueOf(dateLivraisonReelle));
+            } else {
+                ps.setNull(4, java.sql.Types.DATE);
+            }
 
-	        ResultSet keys = ps.getGeneratedKeys();
-	        if (keys.next()) {
-	            return keys.getInt(1); // idCommande generated
-	        }
-	    }
-	    return -1;
-	}
+            ps.setInt(5, total);
+
+            ps.executeUpdate();
+
+            ResultSet keys = ps.getGeneratedKeys();
+            if (keys.next()) {
+                return keys.getInt(1); // idCommande généré
+            }
+        }
+
+        return -1;
+    }
+
+    public boolean ajouterDetailsCommande(
+        int idCommande,
+        int idMedicament,
+        int quantite,
+        float prixUnitaireAchat
+    ) throws SQLException {
+
+        String sql =
+            "INSERT INTO DetailsCommande " +
+            "(idCommande, idMedicament, quantite, prixUnitaireAchat) " +
+            "VALUES (?, ?, ?, ?)";
+
+        try (Connection conn = Connexion.getConnection();
+            PreparedStatement ps = conn.prepareStatement(sql)) {
+
+            ps.setInt(1, idCommande);
+            ps.setInt(2, idMedicament);
+            ps.setInt(3, quantite);
+            ps.setFloat(4, prixUnitaireAchat);
+
+            return ps.executeUpdate() == 1;
+        }
+    }
+
     //TOUSKIE VENTE/CLIENT
     public int creerClient(String nom, String prenom, int tel) throws SQLException {
     String sql = "INSERT INTO Clients (nom, prenom, tel) VALUES (?, ?, ?)";
