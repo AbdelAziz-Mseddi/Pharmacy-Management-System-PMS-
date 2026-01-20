@@ -7,3 +7,4 @@ bin/
 *.class
 *.log
 .DS_Store
+.metadata
