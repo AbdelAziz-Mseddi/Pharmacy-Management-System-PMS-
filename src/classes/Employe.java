@@ -152,6 +152,56 @@ public class Employe {
             return ps.executeUpdate() == 1;
         }
     }
+     public boolean supprimerDetailsCommande(int idCommande, int idMedicament) {
+        String sql = "DELETE FROM DetailsCommande WHERE idCommande = ? AND idMedicament = ?";
+        
+        try (Connection conn = Connexion.getConnection();
+            PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            pstmt.setInt(1, idCommande);
+            pstmt.setInt(2, idMedicament);
+            
+            int rowsAffected = pstmt.executeUpdate();
+            return rowsAffected > 0;
+            
+        } catch (SQLException e) {
+            System.err.println("Erreur lors de la suppression du détail de commande: " + e.getMessage());
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    //LE MEDICAMENT
+    public int ajouterMedicament(String label, int quantite, String description, 
+                                float prixUnitaire, int seuilMin) {
+        String sql = "INSERT INTO Medicament (label, quantite, texteDesc, prixUnitaire, seuilMin) " +
+                    "VALUES (?, ?, ?, ?, ?)";
+        
+        try (Connection conn = Connexion.getConnection();
+            PreparedStatement pstmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
+            // Définir les paramètres
+            pstmt.setString(1, label);
+            pstmt.setInt(2, quantite);
+            pstmt.setString(3, description);
+            pstmt.setFloat(4, prixUnitaire);
+            pstmt.setInt(5, seuilMin);
+            
+            int rowsAffected = pstmt.executeUpdate();
+            
+            if (rowsAffected > 0) {
+                // Récupérer l'ID généré
+                ResultSet generatedKeys = pstmt.getGeneratedKeys();
+                if (generatedKeys.next()) {
+                    return generatedKeys.getInt(1);
+                }
+            }
+            return -1;
+            
+        } catch (SQLException e) {
+            System.err.println("Erreur lors de l'ajout du médicament: " + e.getMessage());
+            e.printStackTrace();
+            return -1;
+        }
+    }
 
     //TOUSKIE VENTE/CLIENT
     public int creerClient(String nom, String prenom, int tel) throws SQLException {
