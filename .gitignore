@@ -1,9 +1,60 @@
+# Compiled class files
 bin/
+*.class
+target/
+
+# Eclipse project files
 .classpath
 .project
 .settings/
-.vscode/
+.metadata/
+
+# IntelliJ IDEA
 .idea/
-*.class
+*.iml
+*.iws
+*.ipr
+out/
+
+# VS Code
+.vscode/
+
+# Package Files
+*.jar
+*.war
+*.ear
+*.zip
+*.tar.gz
+*.rar
+
+# Log files
 *.log
+
+# Database files
+*.db
+
+# OS specific files
 .DS_Store
+Thumbs.db
+
+# Backup files
+*~
+*.swp
+*.bak
+*.tmp
+*.orig
+
+# Maven
+.mvn/
+mvnw
+mvnw.cmd
+
+# Gradle
+.gradle/
+build/
+
+# Java documentation
+docs/javadoc/
+
+# Test reports
+test-output/
