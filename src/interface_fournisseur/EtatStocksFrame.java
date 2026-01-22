@@ -78,7 +78,7 @@ public class EtatStocksFrame extends JFrame {
         });
 
         retour.addActionListener(e -> {
-            new MenuFrame("admin").setVisible(true);
+            new RapportAnalyseFrame().setVisible(true);
             this.dispose();
         });
 
@@ -94,10 +94,10 @@ public class EtatStocksFrame extends JFrame {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     }
 
-    public static void main(String[] args) 
+    /*public static void main(String[] args) 
     {
         SwingUtilities.invokeLater(() -> {
             new EtatStocksFrame().setVisible(true);
         });
-    }
+    }*/
 }

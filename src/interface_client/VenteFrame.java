@@ -52,7 +52,10 @@ public class VenteFrame extends JFrame {
     private JButton validerBtn;
     private JButton retourBtn;
     
-    public VenteFrame() {
+    private String privilege;
+    
+    public VenteFrame(String p) {
+    	privilege = p;
         setTitle("Enregistrer une Vente");
         setSize(1150, 700);
         setLocationRelativeTo(null);
@@ -253,7 +256,7 @@ public class VenteFrame extends JFrame {
         });
         
         btnAjouterClient.addActionListener(e -> {
-            new AjouterClientFrame().setVisible(true);
+            new AjouterClientFrame(privilege).setVisible(true);
             this.dispose();
         });
         
@@ -288,7 +291,7 @@ public class VenteFrame extends JFrame {
         validerBtn.addActionListener(e -> validerVente());
         
         retourBtn.addActionListener(e -> {
-            new ClientsFrame().setVisible(true);
+            new ClientsFrame(privilege).setVisible(true);
             this.dispose();
         });
     }
@@ -574,33 +577,23 @@ public class VenteFrame extends JFrame {
     
     
     private void validerVente() {
-        if (clientSelectionne == null) {
-            JOptionPane.showMessageDialog(this, 
-                "Veuillez sélectionner un client !", 
-                "Erreur", 
-                JOptionPane.ERROR_MESSAGE);
+        if (clientSelectionne == null) 
+        {
+            JOptionPane.showMessageDialog(this, "Veuillez sélectionner un client !", "Erreur", JOptionPane.ERROR_MESSAGE);
             txtRecherche.requestFocus();
             return;
         }
         
-        if (panier.isEmpty()) {
-            JOptionPane.showMessageDialog(this, 
-                "Le panier est vide !", 
-                "Erreur", 
-                JOptionPane.ERROR_MESSAGE);
+        if (panier.isEmpty()) 
+        {
+            JOptionPane.showMessageDialog(this, "Le panier est vide !", "Erreur", JOptionPane.ERROR_MESSAGE);
             return;
         }
         
         float tot = getTotalFloat();
         
         int response = JOptionPane.showConfirmDialog(this,
-            String.format("Confirmer la vente?\n\nClient: %s %s\nTotal: %.2f DT\nNombre d'articles: %d",
-                clientSelectionne.getNom(),
-                clientSelectionne.getPrenom(),
-                tot,
-                panier.size()),
-            "Confirmation",
-            JOptionPane.YES_NO_OPTION);
+            String.format("Confirmer la vente?\n\nClient: %s %s\nTotal: %.2f DT\nNombre d'articles: %d",clientSelectionne.getNom(),clientSelectionne.getPrenom(),tot,panier.size()),"Confirmation",JOptionPane.YES_NO_OPTION);
         
         if (response != JOptionPane.YES_OPTION) {
             return;
@@ -626,49 +619,59 @@ public class VenteFrame extends JFrame {
             boolean allSuccess = true;
             StringBuilder errorMessages = new StringBuilder();
             
-            for (DetailsVente d : panier) {
+            for (DetailsVente d : panier) 
+            {
                 try {
-                    boolean success = Employe.creerDetailsVente(
+                    String success = Employe.creerDetailsVente(
                         idVente,
                         d.getIdMedicament(),
                         d.getPrixUnitaireVente(),
                         d.getQuantite()
                     );
                     
-                    if (!success) {
+                    if (success.equals("")) 
+                    {
                         allSuccess = false;
                         errorMessages.append("Erreur pour médicament ID ").append(d.getIdMedicament()).append("\n");
                     }
-                } catch (StockInsuffisantException sie) {
+                    else
+                    {
+                    	JOptionPane.showMessageDialog(this,success,"Alerte",JOptionPane.ERROR_MESSAGE);
+                    }
+                } 
+                catch (StockInsuffisantException sie) 
+                {
                     allSuccess = false;
                     errorMessages.append(sie.getMessage()).append("\n");
                 }
             }
             
-            if (allSuccess) {
+            if (allSuccess) 
+            {
                 JOptionPane.showMessageDialog(this, 
                     String.format("Vente ajoutée avec succès!\n\nID Vente: %d\nTotal: %.2f DT", idVente, tot),
                     "Succès",
                     JOptionPane.INFORMATION_MESSAGE);
                 
-                new ClientsFrame().setVisible(true);
+                new ClientsFrame(privilege).setVisible(true);
                 this.dispose();
-            } else {
+            } 
+            else 
+            {
                 JOptionPane.showMessageDialog(this, 
                     "Erreurs lors de l'enregistrement:\n" + errorMessages.toString(),
                     "Erreur", 
                     JOptionPane.ERROR_MESSAGE);
             }
             
-        } catch (SQLException ex) {
-            JOptionPane.showMessageDialog(this, 
-                "Erreur base de données : " + ex.getMessage(), 
-                "Erreur", 
-                JOptionPane.ERROR_MESSAGE);
+        } 
+        catch (SQLException ex) 
+        {
+            JOptionPane.showMessageDialog(this,"Erreur base de données : " + ex.getMessage(),"Erreur", JOptionPane.ERROR_MESSAGE);
         }
     }
     
-    public static void main(String[] args) {
-        SwingUtilities.invokeLater(() -> new VenteFrame().setVisible(true));
-    }
+    /*public static void main(String[] args) {
+        SwingUtilities.invokeLater(() -> new VenteFrame("user").setVisible(true));
+    }*/
 }

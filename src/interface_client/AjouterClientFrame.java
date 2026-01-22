@@ -11,9 +11,12 @@ public class AjouterClientFrame extends JFrame {
     private JTextField txtNom, txtPrenom, txtTel;
     private JButton btnCreer, btnRetour;
     private Employe employe;
+    private String privilege;
 
-    public AjouterClientFrame() {
-
+    public AjouterClientFrame(String p) 
+    {
+    	privilege = p;
+    	
         setTitle("Ajouter Nouveau Client");
         setSize(350, 250);
         setLocationRelativeTo(null);
@@ -54,7 +57,7 @@ public class AjouterClientFrame extends JFrame {
         btnCreer.addActionListener(e -> creerClient());
 
         btnRetour.addActionListener(e -> {
-            VenteFrame venteFrame = new VenteFrame();
+            VenteFrame venteFrame = new VenteFrame(privilege);
             venteFrame.setVisible(true);
 
             dispose();
@@ -93,8 +96,8 @@ public class AjouterClientFrame extends JFrame {
         }
     }
 
-    public static void main(String[] args) {
-        new AjouterClientFrame().setVisible(true);
-    }
+    /*public static void main(String[] args) {
+        new AjouterClientFrame("user").setVisible(true);
+    }*/
 }
 

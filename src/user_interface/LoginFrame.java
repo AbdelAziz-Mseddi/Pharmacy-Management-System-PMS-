@@ -44,11 +44,9 @@ public class LoginFrame extends JFrame {
         panelBottom.add(btnCreate);
         panel.add(panelBottom, BorderLayout.SOUTH);
 
-        // ===== ACTIONS =====
         btnCreate.addActionListener(e -> creerCompte());
         btnLogin.addActionListener(e -> seconnecter());
         
-        // Permettre la connexion avec la touche Entrée
         txtPassword.addActionListener(e -> seconnecter());
 
         add(panel);
@@ -60,10 +58,7 @@ public class LoginFrame extends JFrame {
         String password = new String(txtPassword.getPassword());
 
         if (id.isEmpty() || password.isEmpty()) {
-            JOptionPane.showMessageDialog(this, 
-                "Veuillez remplir tous les champs", 
-                "Champs vides", 
-                JOptionPane.WARNING_MESSAGE);
+            JOptionPane.showMessageDialog(this,"Veuillez remplir tous les champs","Champs vides",JOptionPane.WARNING_MESSAGE);
             return;
         }
 
@@ -107,7 +102,7 @@ public class LoginFrame extends JFrame {
         this.dispose();
     }
 
-    public static void main(String[] args) {
+    /*public static void main(String[] args) {
         SwingUtilities.invokeLater(LoginFrame::new);
-    }
+    }*/
 }

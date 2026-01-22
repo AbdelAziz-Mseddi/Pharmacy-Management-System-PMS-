@@ -18,9 +18,12 @@ public class AjouterMedicamentFrame extends JFrame
 
     private JButton btnAjouter;
     private JButton btnRetour;
+    
+    private String privilege;
 
-    public AjouterMedicamentFrame() 
+    public AjouterMedicamentFrame(String privilege) 
     {
+    	this.privilege = privilege;
 
         setLayout(new BorderLayout(10, 10));
 
@@ -63,7 +66,7 @@ public class AjouterMedicamentFrame extends JFrame
         btnAjouter.addActionListener(e -> ajouterMedicament());
 
         btnRetour.addActionListener(e -> {
-            new CreerCommandeFrame().setVisible(true);
+            new CreerCommandeFrame(privilege).setVisible(true);
             this.dispose();
         });
 
@@ -105,7 +108,7 @@ public class AjouterMedicamentFrame extends JFrame
                 JOptionPane.showMessageDialog(this, "Impossible d'ajouter le médicament !", "Erreur", JOptionPane.ERROR_MESSAGE);
             } else {
                 JOptionPane.showMessageDialog(this, "Médicament ajouté avec ID : " + id);
-                new CreerCommandeFrame().setVisible(true);
+                new CreerCommandeFrame(privilege).setVisible(true);
                 this.dispose();
             }
 
@@ -120,7 +123,7 @@ public class AjouterMedicamentFrame extends JFrame
         }
     }
 
-    public static void main(String[] args) {
-        SwingUtilities.invokeLater(() -> new AjouterMedicamentFrame().setVisible(true));
-    }
+    /*public static void main(String[] args) {
+        SwingUtilities.invokeLater(() -> new AjouterMedicamentFrame("user").setVisible(true));
+    }*/
 }

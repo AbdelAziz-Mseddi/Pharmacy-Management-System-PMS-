@@ -3,7 +3,7 @@ package interface_fournisseur;
 import javax.swing.*;
 
 import classes_principales.Admin;
-import user_interface.MenuFrame;
+import interface_fournisseur.RapportAnalyseFrame;
 
 import java.awt.*;
 import java.time.LocalDate;
@@ -72,7 +72,7 @@ public class ChiffresAffairesFrame extends JFrame
         add(panel);
 
         retour.addActionListener(e -> {
-            new MenuFrame("admin").setVisible(true);
+            new RapportAnalyseFrame().setVisible(true);
             this.dispose();
         });
 
@@ -99,10 +99,10 @@ public class ChiffresAffairesFrame extends JFrame
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     }
 
-    public static void main(String[] args) 
+    /*public static void main(String[] args) 
     {
         SwingUtilities.invokeLater(() -> {
             new ChiffresAffairesFrame().setVisible(true);
         });
-    }
+    }*/
 }

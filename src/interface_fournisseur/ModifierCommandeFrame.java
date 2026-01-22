@@ -194,7 +194,7 @@ public class ModifierCommandeFrame extends JFrame
         try
         {
             
-            int idCommande = Integer.parseInt(txtIdCommande.getText());
+            idCommande = Integer.parseInt(txtIdCommande.getText());
 	        Commande c = CommandeInterface.getCommandeId(idCommande);
 
             valIdCmd.setText(String.valueOf(idCommande));
@@ -363,10 +363,10 @@ public class ModifierCommandeFrame extends JFrame
         valTotal.setText(String.valueOf(total));
     }
     
-    public static void main(String[] args) 
+    /*public static void main(String[] args) 
     {
         SwingUtilities.invokeLater(() -> {
             new ModifierCommandeFrame().setVisible(true);
         });
-    }
+    }*/
 }

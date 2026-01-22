@@ -5,17 +5,16 @@ import java.awt.*;
 import java.time.LocalDate;
 import java.util.ArrayList;
 
-import interface_fournisseur_dao.CommandeInterface;
 import interface_fournisseur_dao.FournisseurInterface;
 import interface_fournisseur_dao.MedicamentInterface;
 
 import javax.swing.table.DefaultTableModel;
 
-import classes_principales.Commande;
 import classes_principales.DetailsCommande;
 import classes_principales.Employe;
 import classes_principales.Fournisseur;
 import classes_principales.Medicament;
+import exceptions_personnalisees.FournisseurInexsistantException;
 
 import java.time.format.DateTimeParseException;
 
@@ -64,9 +63,13 @@ public class CreerCommandeFrame extends JFrame
 
     //bouton nouveau medicament
     private JButton nouveauMedBtn;
+    
+    private String privilege;
 
-    public CreerCommandeFrame()
+    public CreerCommandeFrame(String privilege)
     {
+    	this.privilege = privilege;
+    	
         //panel en haut: fournisseur (vertical)
         JPanel panelFournisseur = new JPanel();
         panelFournisseur.setLayout(new BoxLayout(panelFournisseur, BoxLayout.Y_AXIS));
@@ -211,12 +214,12 @@ public class CreerCommandeFrame extends JFrame
         ajouterBtn.addActionListener(e -> ajouterAuPanier());
 
         nouveauMedBtn.addActionListener(e -> {
-            new AjouterMedicamentFrame().setVisible(true);
+            new AjouterMedicamentFrame(privilege).setVisible(true);
             this.dispose();
         });
 
         retourBtn.addActionListener(e -> {
-            new MenuFrame("user").setVisible(true);
+            new FournisseurFrame(privilege).setVisible(true);
             this.dispose();
         });
 
@@ -234,16 +237,6 @@ public class CreerCommandeFrame extends JFrame
         {
             int id = Integer.parseInt(txtIdf.getText());
             Fournisseur f = FournisseurInterface.getFournisseurId(id);
-
-            if (f == null)
-            {
-                JOptionPane.showMessageDialog(this,"ID inexistant","Erreur",JOptionPane.ERROR_MESSAGE);
-                viderAffichage();
-                new AjouterFournisseurFrame().setVisible(true);
-                this.dispose();
-                return;
-            }
-
             fournisseurValide = f;
             afficherFournisseur(f);
 
@@ -251,6 +244,18 @@ public class CreerCommandeFrame extends JFrame
         catch (NumberFormatException e)
         {
             JOptionPane.showMessageDialog(this,"ID numérique requis!","Erreur",JOptionPane.ERROR_MESSAGE);
+        }
+        catch (FournisseurInexsistantException e)
+        {
+            JOptionPane.showMessageDialog(this,e.getMessage(),"Erreur",JOptionPane.ERROR_MESSAGE);
+            viderAffichage();
+            new AjouterFournisseurFrame(privilege).setVisible(true);
+            this.dispose();
+            return;
+        }
+        catch (SQLException e)
+        {
+            JOptionPane.showMessageDialog(this,"Erreur base de données !","Erreur",JOptionPane.ERROR_MESSAGE);
         }
     }
 
@@ -284,7 +289,9 @@ public class CreerCommandeFrame extends JFrame
         if (cbMedicaments.getItemCount() == 1) 
         {
             nouveauMedBtn.setVisible(true);
-        } else {
+        } 
+        else 
+        {
             nouveauMedBtn.setVisible(false);
         }
     }
@@ -367,11 +374,11 @@ public class CreerCommandeFrame extends JFrame
         }
         catch(DateTimeParseException e)
         {
-            JOptionPane.showMessageDialog(this, "Format de date invalide ! Utilisez YYYY-MM-DD");
+            JOptionPane.showMessageDialog(this, "Format de date invalide !","Erreur",JOptionPane.ERROR_MESSAGE);
         }
         catch (NumberFormatException ex)
         {
-            JOptionPane.showMessageDialog(this, "ID numérique requis !");
+            JOptionPane.showMessageDialog(this, "ID numérique requis !","Erreur",JOptionPane.ERROR_MESSAGE);
         }
         catch (SQLException ex)
         {

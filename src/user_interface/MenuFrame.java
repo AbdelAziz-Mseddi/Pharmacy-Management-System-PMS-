@@ -9,61 +9,77 @@ import java.awt.*;
 
 public class MenuFrame extends JFrame 
 {
-
     private JButton btnClients;
     private JButton btnFournisseurs;
     private JButton btnRapports;
+    private JButton btnLogout;
+    public String privilege;
 
-    public MenuFrame(String privilege) {
+    public MenuFrame(String privilege) 
+    {
+        this.privilege = privilege;
 
-        
         btnClients = new JButton("Gestion Ventes");
         btnFournisseurs = new JButton("Gestion Commandes");
         btnRapports = new JButton("Rapports Analyse");
+        btnLogout = new JButton("Retour");
 
-        JPanel panel = new JPanel();
-        panel.setLayout(new GridLayout(3, 1, 10, 10));
-        panel.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
+        JPanel panelCenter = new JPanel(new GridLayout(3, 1, 10, 10));
+        panelCenter.setBorder(BorderFactory.createEmptyBorder(20, 20, 10, 20));
 
-        panel.add(btnClients);
-        panel.add(btnFournisseurs);
-        panel.add(btnRapports);
+        panelCenter.add(btnClients);
+        panelCenter.add(btnFournisseurs);
+        panelCenter.add(btnRapports);
 
-        add(panel);
+        JPanel panelBottom = new JPanel();
+        panelBottom.setBorder(BorderFactory.createEmptyBorder(0, 20, 20, 20));
+        panelBottom.add(btnLogout);
+
+        setLayout(new BorderLayout());
+        add(panelCenter, BorderLayout.CENTER);
+        add(panelBottom, BorderLayout.SOUTH);
+
+        btnLogout.addActionListener(e -> {
+            new LoginFrame().setVisible(true);
+            dispose();
+        });
 
         btnClients.addActionListener(e -> {
-            new ClientsFrame().setVisible(true);
-            this.dispose();
+            new ClientsFrame(privilege).setVisible(true);
+            dispose();
         });
 
         btnFournisseurs.addActionListener(e -> {
-            new FournisseurFrame().setVisible(true);
-            this.dispose();
+            new FournisseurFrame(privilege).setVisible(true);
+            dispose();
         });
 
         btnRapports.addActionListener(e -> {
-
-            if(privilege.equals("admin")) 
+            if (privilege.equals("admin")) 
             {
                 new RapportAnalyseFrame().setVisible(true);
-                this.dispose();
+                dispose();
             } 
             else 
             {
-                JOptionPane.showMessageDialog(this,"Seuls les administrateurs peuvent y accéder","Accès refusé",JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(
+                    this,
+                    "Seuls les administrateurs peuvent y accéder",
+                    "Accès refusé",
+                    JOptionPane.ERROR_MESSAGE
+                );
             }
         });
 
-        // Frame
         setTitle("Menu");
-        setSize(300, 250);
+        setSize(300, 280);
         setLocationRelativeTo(null);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     }
 
-    public static void main(String[] args) {
+    /*public static void main(String[] args) {
         SwingUtilities.invokeLater(() -> {
             new MenuFrame("admin").setVisible(true);
         });
-    }
+    }*/
 }

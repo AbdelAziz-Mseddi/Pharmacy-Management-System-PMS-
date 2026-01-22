@@ -6,6 +6,7 @@ import java.awt.*;
 import java.util.List;
 import classes_principales.Vente;
 import interface_client_dao.HistoriqueGestion;
+import user_interface.MenuFrame;
 
 public class HistoriqueFrame extends JFrame {
 
@@ -13,10 +14,16 @@ public class HistoriqueFrame extends JFrame {
     private JComboBox<String> comboCritere;
     private JComboBox<String> comboOrder;
     private JButton btnRechercher;
+    private JButton btnRetour;
     private JTable tableHistorique;
     private DefaultTableModel tableModel;
+    
+    private String privilege;
 
-    public HistoriqueFrame() {
+    public HistoriqueFrame(String p) {
+    	
+    	privilege = p;
+    	
         setTitle("Historique des ventes");
         setSize(800, 500);
         setLocationRelativeTo(null);
@@ -27,6 +34,7 @@ public class HistoriqueFrame extends JFrame {
         txtValeur = new JTextField(10);
         comboOrder = new JComboBox<>(new String[]{"ASC", "DESC"});
         btnRechercher = new JButton("Rechercher");
+        btnRetour = new JButton("Retour");
 
         panelTop.add(new JLabel("Filtrer par :"));
         panelTop.add(comboCritere);
@@ -34,6 +42,7 @@ public class HistoriqueFrame extends JFrame {
         panelTop.add(new JLabel("Ordre :"));
         panelTop.add(comboOrder);
         panelTop.add(btnRechercher);
+        panelTop.add(btnRetour);
 
         String[] colonnes = {"ID Vente", "ID Client", "ID Médicament", "Quantité", "Prix Unitaire", "Total", "Date"};
         tableModel = new DefaultTableModel(colonnes, 0);
@@ -44,6 +53,11 @@ public class HistoriqueFrame extends JFrame {
         add(scroll, BorderLayout.CENTER);
 
         btnRechercher.addActionListener(e -> rechercher());
+        
+        btnRetour.addActionListener(e -> {
+            new ClientsFrame(privilege).setVisible(true);
+            this.dispose();
+        });
 
         setVisible(true);
     }
@@ -82,8 +96,8 @@ public class HistoriqueFrame extends JFrame {
         }
     }
 
-    public static void main(String[] args) {
-        SwingUtilities.invokeLater(HistoriqueFrame::new);
-    }
+    /*public static void main(String[] args) {
+    	SwingUtilities.invokeLater(() -> new HistoriqueFrame("user").setVisible(true));
+    }*/
 }
 

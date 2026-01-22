@@ -1,5 +1,7 @@
 package classes_principales;
 
+import classes_principales.Medicament;
+import interface_fournisseur_dao.MedicamentInterface;
 import java.sql.Connection;
 import java.sql.Date;
 import java.sql.PreparedStatement;
@@ -12,7 +14,7 @@ import connexion_sql.Connexion;
 
 public class Employe 
 {
-	private static final int SEUIL_STOCK = 50;
+	
     private int idEmploye;
     private String nom;
     private String prenom;
@@ -82,7 +84,8 @@ public class Employe
 	    
 	    Connection conn = Connexion.getConnection();
 
-	    try (PreparedStatement ps = conn.prepareStatement(sql)) {
+	    try (PreparedStatement ps = conn.prepareStatement(sql)) 
+	    {
 	        ps.setDate(1, Date.valueOf(dateLivraisonPrevue));
 	        ps.setInt(2, idCommande);
 
@@ -234,6 +237,23 @@ public class Employe
         } 
     }
     
+    public static boolean modifStock(int idMed,int q) throws SQLException
+    {
+    	String sql = "UPDATE Medicament SET quantite = ? WHERE idMedicament = ?";
+    
+	    try (Connection conn = Connexion.getConnection();
+	        PreparedStatement ps = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) 
+	    {
+	    	Medicament m = MedicamentInterface.creerMed(idMed);
+	        ps.setInt(1,m.getQuantite() + q);
+	        ps.setInt(2,idMed);
+	        
+	        return ps.executeUpdate() == 1;
+	           
+	    } 
+	    
+    }
+    
     /////////////////////////
     //VENTE/CLIENT
     public static int creerClient(String nom, String prenom, int tel) throws SQLException 
@@ -283,12 +303,14 @@ public class Employe
 	    return -1; 
     }
 
-    public static boolean  creerDetailsVente(int idVente,int idMedicament,float prixUnitaireVente,int quantite) throws SQLException, StockInsuffisantException {
+    public static String  creerDetailsVente(int idVente,int idMedicament,float prixUnitaireVente,int quantite) throws SQLException, StockInsuffisantException {
 
         Connection conn = Connexion.getConnection();
-        
+        int stockActuel = 0;
+        int sm = 0;
+        String msg = ""; //on l'affiche en cas d'alerte
         //verification du stock
-        String checkStockSql = "SELECT quantite FROM Medicament WHERE idMedicament = ?";
+        String checkStockSql = "SELECT quantite, seuilMin FROM Medicament WHERE idMedicament = ?";
         try (PreparedStatement psCheck = conn.prepareStatement(checkStockSql)) 
         {
             psCheck.setInt(1, idMedicament);
@@ -296,7 +318,8 @@ public class Employe
             
             if (rs.next()) 
             {
-                int stockActuel = rs.getInt("quantite");
+                stockActuel = rs.getInt("quantite");
+                sm = rs.getInt("seuilMin");
                 
                 //si le stock est suffisant
                 if (stockActuel < quantite) 
@@ -307,15 +330,6 @@ public class Employe
                     );
                 }
                 
-                //verification par rapport à seuil min
-                if ((stockActuel - quantite) < SEUIL_STOCK) 
-                {
-                    throw new StockInsuffisantException(
-                        "Stock insuffisant pour le médicament ID " + idMedicament + 
-                        ". Le stock après vente (" + (stockActuel - quantite) + 
-                        ") serait inférieur au seuil (" + SEUIL_STOCK+")"
-					);
-                }
             } 
             else 
             {
@@ -342,9 +356,15 @@ public class Employe
                     psUpdate.setInt(2, idMedicament);
                     psUpdate.executeUpdate();
                 }
-                return true;
+                
+                //verification par rapport à seuil min
+                if ((stockActuel - quantite) < sm) 
+                {
+                    msg = "Alerte ! Le médicament d'ID "+idMedicament+" est de de stock "+(stockActuel-quantite)+" sous le seuil minimum "+sm;
+                }
             }
-            return false;
+
+            return msg;
        }
     }
 }

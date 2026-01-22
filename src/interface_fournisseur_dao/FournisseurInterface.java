@@ -1,5 +1,7 @@
 package interface_fournisseur_dao;
 import connexion_sql.Connexion;
+import exceptions_personnalisees.FournisseurInexsistantException;
+
 import java.sql.*;
 
 import classes_principales.Fournisseur;
@@ -8,7 +10,7 @@ import classes_principales.Fournisseur;
 public class FournisseurInterface
 {
 
-    public static Fournisseur getFournisseurId(int i)
+    public static Fournisseur getFournisseurId(int i) throws SQLException, FournisseurInexsistantException
     {
     	Connection cnx = null;
 		PreparedStatement ps = null;

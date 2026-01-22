@@ -50,7 +50,7 @@ public class Admin extends Employe
     public static float[] getChiffreAffaires(LocalDate date) throws SQLException 
     {
         String sql1 = "SELECT SUM(total) FROM Commande " +
-                "WHERE dateLivraisonReelle > ? AND etat = 'recu'";
+                "WHERE dateLivraisonReelle > ? AND etat = 'recue'";
         String sql2 = "SELECT SUM(total) FROM FactureVente " +
                 "WHERE dateVente > ?";
 
@@ -73,6 +73,8 @@ public class Admin extends Employe
                 rs2.next();
                 benefices = rs2.getFloat(1);
             }
+            
+            System.out.println(depenses);
 
             return new float[] { benefices, depenses, benefices - depenses };
         }

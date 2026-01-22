@@ -79,6 +79,75 @@ public class MedicamentInterface
 
         return m;
     }
+    
+    public static Medicament creerMed(int i)
+    {
+    	Connection cnx = null;
+		PreparedStatement ps = null;
+		ResultSet rs = null;
+		Medicament m = null;
+
+        try
+        {
+        	cnx = Connexion.getConnection();
+        	String sql = "SELECT * FROM Medicament WHERE idMedicament = ?";
+;
+        	ps = cnx.prepareStatement(sql);
+        	ps.setInt(1,i);
+        	rs = ps.executeQuery();
+        	
+        	while(rs.next()) 
+        	{
+        		
+                int idM = rs.getInt("idMedicament");
+                int q = rs.getInt("quantite");
+                float p = rs.getFloat("prixUnitaire");
+                String nom = rs.getString("label");
+                int sm = rs.getInt("seuilMin");
+                
+                //System.out.println("AAA "+idM+" "+q+" "+p+" "+nom+" "+sm);
+                
+                m = new Medicament(idM,nom,q,p,sm);
+            }
+        } 
+        catch (SQLException e) 
+        {
+            e.printStackTrace();
+        }
+        
+        finally
+		{
+			try 
+			{ 
+				if (rs != null) 
+					rs.close(); 
+			}
+			catch(Exception e)
+			{
+				
+			}
+			try 
+			{ 
+				if (ps != null)
+					ps.close(); 
+			}
+			catch(Exception e)
+			{
+				
+			}
+			try 
+			{ 
+				if (cnx != null) 
+					cnx.close(); 
+			}
+			catch(Exception e)
+			{
+				
+			}
+		}
+
+        return m;
+    }
 }
 
 

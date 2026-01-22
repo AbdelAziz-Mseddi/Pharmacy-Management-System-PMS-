@@ -15,9 +15,12 @@ public class AjouterFournisseurFrame extends JFrame
     private JTextField txtMail;
     private JButton btnAjouter;
     private JButton btnRetour;
+    private String privilege;
 
-    public AjouterFournisseurFrame() 
+    public AjouterFournisseurFrame(String privilege) 
     {
+    	
+    	this.privilege = privilege;
 
         setLayout(new BorderLayout(10, 10));
 
@@ -52,7 +55,7 @@ public class AjouterFournisseurFrame extends JFrame
         btnAjouter.addActionListener(e -> ajouterFournisseur());
         
         btnRetour.addActionListener(e -> {
-            new CreerCommandeFrame().setVisible(true);
+            new CreerCommandeFrame(privilege).setVisible(true);
             this.dispose();
         });
         
@@ -85,7 +88,7 @@ public class AjouterFournisseurFrame extends JFrame
             else 
             {
                 JOptionPane.showMessageDialog(this, "Fournisseur ajouté avec ID : " + id);
-                new CreerCommandeFrame().setVisible(true);
+                new CreerCommandeFrame(privilege).setVisible(true);
                 this.dispose();
             }
         }
@@ -93,9 +96,13 @@ public class AjouterFournisseurFrame extends JFrame
         {
             JOptionPane.showMessageDialog(this,"Erreur base de données !","Erreur",JOptionPane.ERROR_MESSAGE);
         }
+        catch (NumberFormatException ex) 
+        {
+            JOptionPane.showMessageDialog(this,"Champ téléphone numérique !","Erreur",JOptionPane.ERROR_MESSAGE);
+        }
     }
 
-    public static void main(String[] args) {
-        SwingUtilities.invokeLater(() -> new AjouterFournisseurFrame().setVisible(true));
-    }
+    /*public static void main(String[] args) {
+        SwingUtilities.invokeLater(() -> new AjouterFournisseurFrame("user").setVisible(true));
+    }*/
 }

@@ -11,7 +11,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
-import user_interface.MenuFrame;
+import interface_fournisseur.RapportAnalyseFrame;
 
 public class PerformanceFournisseursFrame extends JFrame 
 {
@@ -57,7 +57,7 @@ public class PerformanceFournisseursFrame extends JFrame
         panelBas.add(retour);
 
         retour.addActionListener(e -> {
-            new MenuFrame("admin").setVisible(true);
+            new RapportAnalyseFrame().setVisible(true);
             this.dispose();
         });
 
@@ -72,9 +72,9 @@ public class PerformanceFournisseursFrame extends JFrame
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     }
 
-    public static void main(String[] args) {
+    /*public static void main(String[] args) {
         SwingUtilities.invokeLater(() -> {
             new PerformanceFournisseursFrame().setVisible(true);
         });
-    }
+    }*/
 }
