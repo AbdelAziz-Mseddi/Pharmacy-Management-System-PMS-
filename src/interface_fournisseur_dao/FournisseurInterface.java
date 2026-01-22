@@ -32,6 +32,10 @@ public class FournisseurInterface
 
                 return new Fournisseur(i,e,t,m);
             }
+            else
+            {
+                throw new FournisseurInexsistantException();
+            }
 
         } 
         catch (SQLException e) 

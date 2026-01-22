@@ -27,7 +27,7 @@ public class ClientsFrame extends JFrame {
         });
         
         btnRetour.addActionListener(e -> {
-            new MenuFrame("user").setVisible(true);
+            new MenuFrame(privilege).setVisible(true);
             this.dispose();
         });
 

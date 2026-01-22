@@ -141,7 +141,7 @@ public class CreerCommandeFrame extends JFrame
 
         lblQ = new JLabel("Quantité: ");
         txtQ = new JTextField(12);
-        lblP = new JLabel("Prix: ");
+        lblP = new JLabel("Prix dt: ");
         txtP = new JTextField(12);
         ajouterBtn = new JButton("Ajouter");
 
