@@ -46,7 +46,7 @@ public class RapportAnalyseFrame extends JFrame
         //message d'alerte
 		boolean test = CritiqueInterface.stockCritique();
 		
-		if(!test)
+		if(test)
 		{
 			JPanel alertPanel = new JPanel();
 		    alertPanel.setLayout(new GridLayout(2, 1));
