@@ -38,10 +38,10 @@ public class PerformanceFournisseursFrame extends JFrame
 
         	for (PerformanceFournisseur p : list) {
         	    model.addRow(new Object[] {
-        	        p.idFournisseur,
-        	        p.entreprise,
-        	        p.nbrAnnulation,
-        	        p.nbrRetards
+        	        p.getIdFournisseur(),
+        	        p.getEntreprise(),
+        	        p.getNbrAnnulation(),
+        	        p.getNbrRetards()
         	    });
         	}
 

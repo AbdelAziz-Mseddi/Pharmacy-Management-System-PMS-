@@ -100,10 +100,10 @@ public class Admin extends Employe
             while (res.next()) 
             {
 	            PerformanceFournisseur pf = new PerformanceFournisseur();
-	            pf.idFournisseur = res.getInt("idFournisseur");
-	            pf.entreprise = res.getString("entreprise");
-	            pf.nbrAnnulation = res.getInt("nbr_annulation");
-	            pf.nbrRetards = res.getInt("nbr_retards");
+	            pf.setIdFournisseur(res.getInt("idFournisseur"));
+	            pf.setEntreprise(res.getString("entreprise"));
+	            pf.setNbrAnnulation(res.getInt("nbr_annulation"));
+	            pf.setNbrRetards(res.getInt("nbr_retards"));
 	            list.add(pf);
             }
         }
