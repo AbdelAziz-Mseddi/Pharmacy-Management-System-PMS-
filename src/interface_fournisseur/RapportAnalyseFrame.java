@@ -12,9 +12,12 @@ public class RapportAnalyseFrame extends JFrame
 	private JButton es; //etat des stocks
 	private JButton pf; //performance des utilisateurs
 	private JButton retour;
+	private String privilege;
 	
-	public RapportAnalyseFrame()
+	public RapportAnalyseFrame(String pr)
 	{
+		privilege = pr;
+		
 		//panel principal: en cas d'alerte le message ici sera affiché
         JPanel panel = new JPanel();
         panel.setLayout(new BorderLayout(10, 10));
@@ -65,22 +68,22 @@ public class RapportAnalyseFrame extends JFrame
         add(panel);
 		
         retour.addActionListener(e -> {
-            new MenuFrame("admin").setVisible(true);
+            new MenuFrame(privilege).setVisible(true);
             this.dispose();
         });
         
         ca.addActionListener(e -> {
-            new ChiffresAffairesFrame().setVisible(true);
+            new ChiffresAffairesFrame(privilege).setVisible(true);
             this.dispose();
         });
         
         pf.addActionListener(e -> {
-            new PerformanceFournisseursFrame().setVisible(true);
+            new PerformanceFournisseursFrame(privilege).setVisible(true);
             this.dispose();
         });
         
         es.addActionListener(e -> {
-            new EtatStocksFrame().setVisible(true);
+            new EtatStocksFrame(privilege).setVisible(true);
             this.dispose();
         });
         
@@ -94,7 +97,7 @@ public class RapportAnalyseFrame extends JFrame
 	/*public static void main(String[] args) 
 	{
         SwingUtilities.invokeLater(() -> {
-            new RapportAnalyseFrame().setVisible(true);
+            new RapportAnalyseFrame("admin").setVisible(true);
         });
     }*/
 }

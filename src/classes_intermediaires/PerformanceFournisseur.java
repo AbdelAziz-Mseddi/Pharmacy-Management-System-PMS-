@@ -1,22 +1,15 @@
 package classes_intermediaires;
 
-public class PerformanceFournisseur 
+import classes_principales.Fournisseur;
+public class PerformanceFournisseur extends Fournisseur
 {
-    private int idFournisseur;
-    private String entreprise;
+    
     private int nbrAnnulation;
     private int nbrRetards;
 
-    public int getIdFournisseur() {
-        return idFournisseur;
-    }
-
+    
     public void setIdFournisseur(int idFournisseur) {
         this.idFournisseur = idFournisseur;
-    }
-
-    public String getEntreprise() {
-        return entreprise;
     }
 
     public void setEntreprise(String entreprise) {

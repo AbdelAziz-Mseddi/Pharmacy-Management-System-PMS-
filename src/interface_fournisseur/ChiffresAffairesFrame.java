@@ -1,10 +1,7 @@
 package interface_fournisseur;
 
 import javax.swing.*;
-
 import classes_principales.Admin;
-import interface_fournisseur.RapportAnalyseFrame;
-
 import java.awt.*;
 import java.time.LocalDate;
 
@@ -21,9 +18,12 @@ public class ChiffresAffairesFrame extends JFrame
     private JLabel valDepense;
     private JLabel lblDifference;
     private JLabel valDifference;
+    
+    private String privilege;
 
-    public ChiffresAffairesFrame() 
+    public ChiffresAffairesFrame(String pr) 
     {
+    	privilege = pr;
 
         //panel haut
         JPanel panelHaut = new JPanel(new GridLayout(3, 1, 0, 10));
@@ -72,7 +72,7 @@ public class ChiffresAffairesFrame extends JFrame
         add(panel);
 
         retour.addActionListener(e -> {
-            new RapportAnalyseFrame().setVisible(true);
+            new RapportAnalyseFrame(privilege).setVisible(true);
             this.dispose();
         });
 
@@ -102,7 +102,7 @@ public class ChiffresAffairesFrame extends JFrame
     /*public static void main(String[] args) 
     {
         SwingUtilities.invokeLater(() -> {
-            new ChiffresAffairesFrame().setVisible(true);
+            new ChiffresAffairesFrame("admin").setVisible(true);
         });
     }*/
 }

@@ -2,24 +2,23 @@ package interface_fournisseur;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
-
 import classes_intermediaires.PerformanceFournisseur;
 import classes_principales.Admin;
-
 import java.awt.*;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
-import interface_fournisseur.RapportAnalyseFrame;
 
 public class PerformanceFournisseursFrame extends JFrame 
 {
 
     private JTable table;
     private JButton retour;
+    private String privilege;
 
-    public PerformanceFournisseursFrame() {
+    public PerformanceFournisseursFrame(String pr) 
+    {
+    	privilege = pr;
 
         //table
         DefaultTableModel model = new DefaultTableModel();
@@ -39,7 +38,7 @@ public class PerformanceFournisseursFrame extends JFrame
         	for (PerformanceFournisseur p : list) {
         	    model.addRow(new Object[] {
         	        p.getIdFournisseur(),
-        	        p.getEntreprise(),
+        	        p.getEntrepriseFournisseur(),
         	        p.getNbrAnnulation(),
         	        p.getNbrRetards()
         	    });
@@ -57,7 +56,7 @@ public class PerformanceFournisseursFrame extends JFrame
         panelBas.add(retour);
 
         retour.addActionListener(e -> {
-            new RapportAnalyseFrame().setVisible(true);
+            new RapportAnalyseFrame(privilege).setVisible(true);
             this.dispose();
         });
 
@@ -74,7 +73,7 @@ public class PerformanceFournisseursFrame extends JFrame
 
     /*public static void main(String[] args) {
         SwingUtilities.invokeLater(() -> {
-            new PerformanceFournisseursFrame().setVisible(true);
+            new PerformanceFournisseursFrame("admin").setVisible(true);
         });
     }*/
 }

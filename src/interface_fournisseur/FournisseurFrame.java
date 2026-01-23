@@ -128,7 +128,7 @@ public class FournisseurFrame extends JFrame
         });
 
         btnModifier.addActionListener(e -> {
-            new ModifierCommandeFrame().setVisible(true);
+            new ModifierCommandeFrame(privilege).setVisible(true);
             this.dispose();
         });
 
@@ -198,7 +198,7 @@ public class FournisseurFrame extends JFrame
                         ArrayList<DetailsCommandeLabel> d = CommandeInterface.getDetailsCommandeLabel(id);
                         
                         for(DetailsCommandeLabel l :d)
-                        	Employe.modifStock(l.getIdMedicament(), l.getQuantite());
+                        	Employe.modifStock(l.getIdMed(), l.getQuantite());
                     }
                     else
                     {

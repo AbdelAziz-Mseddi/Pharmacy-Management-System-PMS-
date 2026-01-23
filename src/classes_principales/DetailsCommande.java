@@ -2,10 +2,12 @@ package classes_principales;
 
 public class DetailsCommande 
 {
-	//private int idC;
-    private int idMed;
-    private int quantite;
-    private float prixAchat;
+	//les champs sont protected pas private pour la classe fille intermédiare DetailsCommandeLabel
+	
+	//protected int idC;
+    protected int idMed;
+    protected int quantite;
+    protected float prixAchat;
     
     public DetailsCommande(int m,int q,float p)
     {

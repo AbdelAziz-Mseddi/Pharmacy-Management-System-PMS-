@@ -18,9 +18,13 @@ public class EtatStocksFrame extends JFrame {
     private JTextField txtMarge;
     private JButton btnAfficher;
     private JButton retour;
+    
+    private String privilege;
 
-    public EtatStocksFrame() {
-
+    public EtatStocksFrame(String pr) 
+    {
+    	privilege = pr;
+    	
         //panel haut saisie marge
         JPanel panelHaut = new JPanel();
         panelHaut.add(new JLabel("Marge :"));
@@ -78,7 +82,7 @@ public class EtatStocksFrame extends JFrame {
         });
 
         retour.addActionListener(e -> {
-            new RapportAnalyseFrame().setVisible(true);
+            new RapportAnalyseFrame(privilege).setVisible(true);
             this.dispose();
         });
 
@@ -97,7 +101,7 @@ public class EtatStocksFrame extends JFrame {
     /*public static void main(String[] args) 
     {
         SwingUtilities.invokeLater(() -> {
-            new EtatStocksFrame().setVisible(true);
+            new EtatStocksFrame("admin").setVisible(true);
         });
     }*/
 }

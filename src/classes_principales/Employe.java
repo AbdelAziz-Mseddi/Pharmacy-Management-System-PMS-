@@ -1,6 +1,5 @@
 package classes_principales;
 
-import classes_principales.Medicament;
 import interface_fournisseur_dao.MedicamentInterface;
 import java.sql.Connection;
 import java.sql.Date;

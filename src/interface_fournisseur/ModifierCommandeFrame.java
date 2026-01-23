@@ -52,9 +52,13 @@ public class ModifierCommandeFrame extends JFrame
     private JButton btnRetour;
 
     private int idCommande = -1;
+    
+    private String privilege;
 
-    public ModifierCommandeFrame()
+    public ModifierCommandeFrame(String pr)
     {
+    	privilege = pr;
+    	
     	setLayout(new BorderLayout());
     	
         panier = new ArrayList<>();
@@ -179,7 +183,7 @@ public class ModifierCommandeFrame extends JFrame
         btnValider.addActionListener(e -> validerModification());
         btnRetour.addActionListener(e -> {
             dispose();
-            new MenuFrame("user").setVisible(true);
+            new FournisseurFrame(privilege).setVisible(true);
         });
 
         setTitle("Modifier Commande");
@@ -236,7 +240,7 @@ public class ModifierCommandeFrame extends JFrame
             panier.add(d);
 
             modelPanier.addRow(new Object[]{
-                    d.getIdMedicament(),
+                    d.getIdMed(),
                     d.getLabel(),
                     d.getQuantite(),
                     d.getPrixAchat()
@@ -366,7 +370,7 @@ public class ModifierCommandeFrame extends JFrame
     /*public static void main(String[] args) 
     {
         SwingUtilities.invokeLater(() -> {
-            new ModifierCommandeFrame().setVisible(true);
+            new ModifierCommandeFrame("admin").setVisible(true);
         });
     }*/
 }

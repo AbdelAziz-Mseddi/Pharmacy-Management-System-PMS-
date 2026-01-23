@@ -57,7 +57,7 @@ public class MenuFrame extends JFrame
         btnRapports.addActionListener(e -> {
             if (privilege.equals("admin")) 
             {
-                new RapportAnalyseFrame().setVisible(true);
+                new RapportAnalyseFrame(privilege).setVisible(true);
                 dispose();
             } 
             else 

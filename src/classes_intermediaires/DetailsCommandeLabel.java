@@ -1,23 +1,16 @@
 package classes_intermediaires;
 
-public class DetailsCommandeLabel 
+import classes_principales.DetailsCommande;
+
+public class DetailsCommandeLabel extends DetailsCommande
 {
-	private int idMed;
+	
 	private String label;
-	private int quantite;
-	private float prixAchat;
 	
 	public DetailsCommandeLabel(int i,String s,int q,float p)
 	{
-		idMed = i;
+		super(i,q,p);
 		label = s;
-		quantite = q;
-		prixAchat = p;
-	}
-	
-	public int getIdMedicament()
-	{
-		return idMed;
 	}
 	
 	public String getLabel()
@@ -25,14 +18,4 @@ public class DetailsCommandeLabel
 		return label;
 	}
 	
-	public int getQuantite()
-	{
-		return quantite;
-	}
-	
-	public float getPrixAchat()
-	{
-		return prixAchat;
-	}
-
 }
