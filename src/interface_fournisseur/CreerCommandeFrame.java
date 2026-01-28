@@ -369,7 +369,7 @@ public class CreerCommandeFrame extends JFrame
             }
 
             JOptionPane.showMessageDialog(this,"Commande ajoutée avec succès avec ID Commande: " +idC+" et Facture: "+tot);
-            new MenuFrame("user").setVisible(true);
+            new MenuFrame(privilege).setVisible(true);
             this.dispose();
         }
         catch(DateTimeParseException e)
