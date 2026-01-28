@@ -17,29 +17,29 @@ public class HistoriqueGestion {
             case "idvente":
                 sql = "SELECT f.idVente, f.idClient, d.idMedicament, f.dateVente, d.prixUnitaireVente, d.quantite " +
                       "FROM FactureVente f JOIN DetailsVente d ON f.idVente = d.idVente " +
-                      "WHERE f.idVente = ? ORDER BY f.idVente " + order;
+                      "WHERE f.idVente = ? ORDER BY (d.quantite * d.prixUnitaireVente) " + order;
                 break;
             case "idclient":
                 sql = "SELECT f.idVente, f.idClient, d.idMedicament, f.dateVente, d.prixUnitaireVente, d.quantite " +
                       "FROM FactureVente f JOIN DetailsVente d ON f.idVente = d.idVente " +
-                      "WHERE f.idClient = ? ORDER BY f.idClient " + order;
+                      "WHERE f.idClient = ? ORDER BY (d.quantite * d.prixUnitaireVente) " + order;
                 break;
             case "idmedicament":
                 sql = "SELECT f.idVente, f.idClient, d.idMedicament, f.dateVente, d.prixUnitaireVente, d.quantite " +
                       "FROM FactureVente f JOIN DetailsVente d ON f.idVente = d.idVente " +
-                      "WHERE d.idMedicament = ? ORDER BY d.idMedicament " + order;
+                      "WHERE d.idMedicament = ? ORDER BY (d.quantite * d.prixUnitaireVente) " + order;
                 break;
             default: // "all"
                 sql = "SELECT f.idVente, f.idClient, d.idMedicament, f.dateVente, d.prixUnitaireVente, d.quantite " +
-                      "FROM FactureVente f JOIN DetailsVente d ON f.idVente = d.idVente ORDER BY f.dateVente " + order;
+                      "FROM FactureVente f JOIN DetailsVente d ON f.idVente = d.idVente ORDER BY (d.quantite * d.prixUnitaireVente) " + order;
         }
 
         try (Connection cnx = Connexion.getConnection();
              PreparedStatement ps = cnx.prepareStatement(sql)) {
 
-            if (!critere.equalsIgnoreCase("all")) {
-                ps.setString(1, valeur);
-            }
+        	if (!critere.equalsIgnoreCase("all")) {
+        	    ps.setInt(1, Integer.parseInt(valeur));
+        	}
 
             ResultSet rs = ps.executeQuery();
 

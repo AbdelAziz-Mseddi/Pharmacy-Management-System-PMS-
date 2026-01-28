@@ -97,6 +97,11 @@ public class CreerCompteFrame extends JFrame {
             JOptionPane.showMessageDialog(this, "Tous les champs sont obligatoires");
             return;
         }
+        
+        if (!tel.matches("\\d+")) {
+        	JOptionPane.showMessageDialog(this, "Le téléphone doit contenir uniquement des chiffres");
+        	return;
+        	}
 
         if (!pass.equals(confirm)) {
             JOptionPane.showMessageDialog(this, "Les mots de passe ne correspondent pas");
@@ -112,7 +117,7 @@ public class CreerCompteFrame extends JFrame {
             btnCreer.setEnabled(false);
         } else {
             JOptionPane.showMessageDialog(this,
-                    "Erreur : impossible de créer le compte (email ou tel déjà existant)");
+                    "Erreur : impossible de créer le compte");
         }
     }
 

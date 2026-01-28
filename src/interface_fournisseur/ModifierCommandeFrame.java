@@ -253,6 +253,17 @@ public class ModifierCommandeFrame extends JFrame
         try
         {
             LocalDate nouvelleDate = LocalDate.parse(txtNewDlp.getText().trim());
+          
+            Commande c = CommandeInterface.getCommandeId(idCommande);
+            
+            LocalDate dateCommande = c.getDateCommande();
+            if (!nouvelleDate.isAfter(dateCommande)) 
+            {
+	            JOptionPane.showMessageDialog(this,
+	            "La date de livraison doit être après la date de commande",
+	            "Erreur", JOptionPane.ERROR_MESSAGE);
+	            return;
+            }
 
             boolean test = Employe.modifierCommande(idCommande, nouvelleDate);
 
@@ -271,6 +282,10 @@ public class ModifierCommandeFrame extends JFrame
         catch (SQLException e)
         {
             JOptionPane.showMessageDialog(this,"Erreur base de données","Erreur",JOptionPane.ERROR_MESSAGE);
+        }
+        catch (CommandeInexistanteException e)
+        {
+            JOptionPane.showMessageDialog(this,"Commande inexistante!","Erreur",JOptionPane.ERROR_MESSAGE);
         }
     }
 

@@ -285,6 +285,7 @@ public class CreerCommandeFrame extends JFrame
             cbMedicaments.addItem(m);
         }
 
+        /*
         //si la liste est vide on affiche le bouton ajouter 
         if (cbMedicaments.getItemCount() == 1) 
         {
@@ -293,7 +294,7 @@ public class CreerCommandeFrame extends JFrame
         else 
         {
             nouveauMedBtn.setVisible(false);
-        }
+        }*/
     }
 
     private void ajouterAuPanier()

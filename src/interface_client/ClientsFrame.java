@@ -39,6 +39,7 @@ public class ClientsFrame extends JFrame {
         p.add(btnRetour);
 
         add(p);
+        setTitle("Menu Ventes");
         setSize(300,150);
         setLocationRelativeTo(null);
     }
